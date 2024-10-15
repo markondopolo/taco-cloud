@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import lombok.extern.slf4j.Slf4j;
-import tacos.Ingredient;
-import tacos.Ingredient.Type;
-import tacos.Taco;
-import tacos.TacoOrder;
+import tacos.model.Ingredient;
+import tacos.model.Ingredient.Type;
+import tacos.model.Taco;
+import tacos.model.TacoOrder;
 import tacos.data.IngredientRepository;
 
 @Slf4j
@@ -69,6 +69,8 @@ public class DesignTacoController {
         if (errors.hasErrors()) {
             return "design";
         }
+
+        taco.setTacoOrder(tacoOrder);
 
         tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);

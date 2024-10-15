@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import tacos.TacoOrder;
+import tacos.model.TacoOrder;
 import tacos.data.OrderRepository;
 
 @Controller
@@ -16,7 +16,7 @@ import tacos.data.OrderRepository;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
-    private OrderRepository orderRepo;
+    private final OrderRepository orderRepo;
 
     public OrderController(OrderRepository orderRepo) {
         this.orderRepo = orderRepo;
