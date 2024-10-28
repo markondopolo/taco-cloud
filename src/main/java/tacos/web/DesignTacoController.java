@@ -1,7 +1,6 @@
 package tacos.web;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import tacos.model.Ingredient.Type;
 import tacos.model.Taco;
 import tacos.model.TacoOrder;
 import tacos.data.IngredientRepository;
+import tacos.service.IngredientService;
+import tacos.service.OrderService;
 
 @Slf4j
 @Controller
@@ -28,9 +29,15 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
 
+    private final OrderService orderService;
+
+    private final IngredientService ingredientService;
+
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, OrderService orderService, IngredientService ingredientService) {
         this.ingredientRepo = ingredientRepo;
+        this.orderService = orderService;
+        this.ingredientService = ingredientService;
     }
 
     @ModelAttribute
@@ -41,7 +48,7 @@ public class DesignTacoController {
         for (Type type : types) {
             model.addAttribute(
                     type.toString().toLowerCase(),
-                    filterByType((List<Ingredient>) ingredients, type)
+                    ingredientService.filterIngredientsByType((List<Ingredient>) ingredients, type)
             );
         }
     }
@@ -70,16 +77,10 @@ public class DesignTacoController {
             return "design";
         }
 
-        taco.setTacoOrder(tacoOrder);
+        orderService.addTacoToOrder(taco, tacoOrder);
 
-        tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
 
         return "redirect:/orders/current";
-    }
-
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
-        return ingredients.stream()
-                .filter(x -> x.getType().equals(type)).collect(Collectors.toList());
     }
 }
